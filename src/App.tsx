@@ -1,32 +1,48 @@
-import React, { useState } from 'react';
-import { ImageBackground, KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from 'react-native';
-
+import React, { useRef, useState } from 'react';
+import { Button, ImageBackground, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import * as Generator from "./utils/generator"
 const image = { uri: "https://images.pexels.com/photos/844124/pexels-photo-844124.jpeg" };
-
+let invalidInput = false;
 
 const App = () => {
-  const [text, setText] = useState("");
-  const [number, setNumber] = useState("");
+  const [wordCount, setWordCount] = useState("");
+  const [resultText, setResultText] = useState("");
+  
+  const getWordCount = () => {
+    if (
+      wordCount === "12" ||
+      wordCount === "15" ||
+      wordCount === "18" ||
+      wordCount === "21" ||
+      wordCount === "24") {
+        invalidInput = false;
+        setResultText("The random byte is " + Generator.getRandomBytes(wordCount));
+    }
+    else
+    {
+      invalidInput = true;
+      setResultText("Invalid input. Must be either 12, 15, 18, 21, or 24!");
+    }
+  }
   return (
     <KeyboardAvoidingView style={styles.container}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
         <View style={styles.content}>
-          <Text style={styles.contentText}>BitCoin Playground for {text}</Text>
+          <Text style={styles.contentText}>BitCoin Playground</Text>
           <View>
             <TextInput
               style={styles.input}
-              onChangeText={setText}
-              value={text}
-              placeholder="Name"
-            />
-            <TextInput
-              style={styles.input}
-              onChangeText={setNumber}
-              value={number}
-              placeholder="No."
+              onChangeText={setWordCount}
+              value={wordCount}
+              placeholder="Word Count"
               keyboardType="numeric"
             />
           </View>
+          <Pressable onPress={getWordCount}>
+            <Text style={styles.buttonText}>Submit</Text>
+          </Pressable>
+          <Text style={[styles.resultText, {color: invalidInput?"red":"white"}]}>{resultText}</Text>
+          
         </View>
       </ImageBackground>
     </KeyboardAvoidingView>
@@ -52,8 +68,19 @@ const styles = StyleSheet.create({
   contentText: {
     color: "white",
     fontSize: 42,
-    lineHeight: 84,
     fontWeight: "bold",
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 18,
+    backgroundColor: "blue",
+    borderRadius: 10,
+    padding: 10,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  resultText:{
+    marginVertical: 5,
   },
   input: {
     width: 350,
@@ -63,7 +90,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: 'white',
     borderRadius: 10,
-    
+
   },
 })
 export default App;

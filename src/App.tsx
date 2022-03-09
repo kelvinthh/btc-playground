@@ -1,26 +1,19 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { StyleSheet, Text, View } from 'react-native';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <View style={styles.container}>
+      <Text>This is running via React Native Web!</Text>
+    </View>
   );
 }
-
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    height: "100%"
+  }
+})
 export default App;

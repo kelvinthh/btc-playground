@@ -1,3 +1,4 @@
+import { randomBytes } from 'crypto';
 import React, { useRef, useState } from 'react';
 import { Button, ImageBackground, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import * as Generator from "./utils/generator"
@@ -16,7 +17,12 @@ const App = () => {
       wordCount === "21" ||
       wordCount === "24") {
         invalidInput = false;
-        setResultText("The random byte is " + Generator.getRandomBytes(wordCount));
+        const randomBytes = Generator.getRandomBytes(wordCount);
+        const initEntropy = Generator.getInitEntropy(randomBytes);
+        const hash = Generator.getHash(initEntropy);
+        setResultText(hash);
+        // setResultText("The random byte is " + randomBytes + 
+        // "\nInitial Entropy is " + Generator.getInitEntropy(randomBytes));
     }
     else
     {
@@ -34,7 +40,7 @@ const App = () => {
               style={styles.input}
               onChangeText={setWordCount}
               value={wordCount}
-              placeholder="Word Count"
+              placeholder="Word Count (Enter either 12, 15, 18, 21, or 24)"
               keyboardType="numeric"
             />
           </View>
@@ -62,6 +68,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000c0",
     flex: 1,
     flexDirection: "column",
+    flexShrink: 1,
     justifyContent: "center",
     alignItems: "center"
   },
@@ -81,6 +88,8 @@ const styles = StyleSheet.create({
   },
   resultText:{
     marginVertical: 5,
+    textAlign: "center",
+    flexWrap: 'wrap'
   },
   input: {
     width: 350,

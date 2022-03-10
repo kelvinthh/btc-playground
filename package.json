@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start": "parcel serve ./index.html",
-    "build": "parcel build ./index.html",
+    "build": "parcel build ./index.html --no-minify",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

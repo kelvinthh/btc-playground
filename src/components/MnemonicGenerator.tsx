@@ -1,4 +1,4 @@
-import { View, Text, KeyboardAvoidingView, ImageBackground, Pressable, TextInput, StyleSheet } from 'react-native'
+import { View, Text, KeyboardAvoidingView, ImageBackground, Pressable, TextInput, StyleSheet, Modal } from 'react-native'
 import React, { useState } from 'react'
 import * as Mnemonic from "../utils/mnemonic"
 
@@ -8,6 +8,8 @@ let invalidInput = false;
 export default function MnemonicGenerator() {
   const [wordCount, setWordCount] = useState("");
   const [resultText, setResultText] = useState("");
+  const [errorText, setErrorText] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
 
   const getWordCount = () => {
     if (
@@ -17,15 +19,39 @@ export default function MnemonicGenerator() {
       wordCount === "21" ||
       wordCount === "24") {
       invalidInput = false;
+      setModalVisible(true);
       setResultText(Mnemonic.generateMnemonic(wordCount));
+      setWordCount("");
+      setErrorText("");
     }
     else {
       invalidInput = true;
-      setResultText("Invalid input. Must be either 12, 15, 18, 21, or 24!");
+      setWordCount("");
+      setErrorText("Invalid input. Must be either 12, 15, 18, 21, or 24!");
     }
   }
   return (
     <View style={styles.content}>
+      <Modal
+        animationType='slide'
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.modal}>
+          <Text style={styles.contentText}>Here's your words:</Text>
+          <Text style={styles.resultText}>{resultText}</Text>
+          <Pressable onPress={()=> {
+              setModalVisible(false);
+              setResultText("15");
+            }}>
+            <Text style={[styles.buttonText,{marginVertical: 10}]}>Try Again!</Text>
+          </Pressable>
+        </View>
+      </Modal>
+
       <Text style={styles.contentText}>Mnemonic Words Generator</Text>
       <View>
         <TextInput
@@ -39,7 +65,7 @@ export default function MnemonicGenerator() {
       <Pressable onPress={getWordCount}>
         <Text style={styles.buttonText}>Generate!</Text>
       </Pressable>
-      <Text style={[styles.resultText, { color: invalidInput ? "red" : "white" }]}>{resultText}</Text>
+      <Text style={styles.errorText}>{errorText}</Text>
     </View>
   )
 }
@@ -53,7 +79,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     backgroundColor: "#000000a0",
-    width: '50%',
+    width: 450,
     paddingVertical: 50,
     borderRadius: 15
   },
@@ -74,9 +100,18 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
   },
   resultText: {
-    marginVertical: 5,
+    marginTop: 5,
     textAlign: "center",
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    fontSize: 18,
+    fontWeight: "bold",
+    color:'yellow'
+  },
+  errorText: {
+    marginTop: 5,
+    textAlign: "center",
+    flexWrap: 'wrap',
+    color:'red'
   },
   input: {
     width: 315,
@@ -89,6 +124,18 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     shadowOpacity: 0.5,
     shadowRadius: 10,
-
   },
+  modal: {
+    backgroundColor: "#000000e0",
+    borderColor: 'white',
+    borderWidth: 5,
+    width: "100%",
+    height: "100%",
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 30,
+    flexDirection: 'column',
+    textAlign: "center"
+  }
 })

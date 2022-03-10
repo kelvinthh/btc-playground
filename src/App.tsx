@@ -1,48 +1,21 @@
 import { randomBytes } from 'crypto';
 import React, { useRef, useState } from 'react';
-import { Button, ImageBackground, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, ColorPropType, ImageBackground, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import MnemonicGenerator from './components/MnemonicGenerator';
 import * as Mnemonic from "./utils/mnemonic"
+
 const image = { uri: "https://images.pexels.com/photos/844124/pexels-photo-844124.jpeg" };
-let invalidInput = false;
 
 const App = () => {
-  const [wordCount, setWordCount] = useState("");
-  const [resultText, setResultText] = useState("");
-
-  const getWordCount = () => {
-    if (
-      wordCount === "12" ||
-      wordCount === "15" ||
-      wordCount === "18" ||
-      wordCount === "21" ||
-      wordCount === "24") {
-      invalidInput = false;
-      setResultText(Mnemonic.generateMnemonic(wordCount));
-    }
-    else {
-      invalidInput = true;
-      setResultText("Invalid input. Must be either 12, 15, 18, 21, or 24!");
-    }
-  }
   return (
     <KeyboardAvoidingView style={styles.container}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
         <View style={styles.content}>
-          <Text style={styles.contentText}>BitCoin Playground</Text>
-          <View>
-            <TextInput
-              style={styles.input}
-              onChangeText={setWordCount}
-              value={wordCount}
-              placeholder="Word Count (Enter either 12, 15, 18, 21, or 24)"
-              keyboardType="numeric"
-            />
+          <View style={{marginBottom: 50}}>
+            <Text style={styles.titleText}>BitCoin Playground</Text>
+            <Text style={{color: 'white'}}>Created by Kelvin Tam</Text>
           </View>
-          <Pressable onPress={getWordCount}>
-            <Text style={styles.buttonText}>Submit</Text>
-          </Pressable>
-          <Text style={[styles.resultText, { color: invalidInput ? "red" : "white" }]}>{resultText}</Text>
-
+          <MnemonicGenerator />
         </View>
       </ImageBackground>
     </KeyboardAvoidingView>
@@ -51,6 +24,7 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
     height: "100%",
   },
   image: {
@@ -62,38 +36,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000c0",
     flex: 1,
     flexDirection: "column",
-    flexShrink: 1,
-    justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    justifyContent: 'center'
   },
-  contentText: {
+  titleText: {
     color: "white",
-    fontSize: 42,
+    fontSize: 50,
     fontWeight: "bold",
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 18,
-    backgroundColor: "blue",
-    borderRadius: 10,
-    padding: 10,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  resultText: {
-    marginVertical: 5,
-    textAlign: "center",
-    flexWrap: 'wrap'
-  },
-  input: {
-    width: 350,
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    backgroundColor: 'white',
-    borderRadius: 10,
-
   },
 })
 export default App;

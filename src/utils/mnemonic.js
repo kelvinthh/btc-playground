@@ -2,16 +2,13 @@ let crypto = require("crypto");
 let CryptoJS = require("crypto-js");
 let BIP39 = require("bip39");
 
-export function generateMnemonic(wordCount)
+export function generateMnemonic(wordCount) // Word count can be any of 12, 15, 18, 21, 24
 {
     let randomBytes = getRandomBytes(wordCount);
-    let initEntropy = getInitEntropy(randomBytes);
-    let hash = getHash(initEntropy);
-    let checksumBits = parseInt(hash.substring(0,2), 16).toString(2).substring(0,5);
-    let finalEntropy = initEntropy.concat(checksumBits)
-    let mnemonic = getMnemonic(finalEntropy);
-    if(validate(mnemonic))
+    let mnemonic = BIP39.entropyToMnemonic(randomBytes);
+    if(BIP39.validateMnemonic(mnemonic))
     {
+        console.log("Valid BIP39 Mnemonic, Length:",mnemonic.split(' ').length);
         return mnemonic;
     }
     else
@@ -33,6 +30,28 @@ function getRandomBytes(wordCount) {
   let randomBytes = crypto.randomBytes(byteCount).toString("hex");
   console.log("Random bytes is", randomBytes);
   return randomBytes;
+}
+
+/* UNUSED CODE
+
+export function generateMnemonic(wordCount)
+{
+    let randomBytes = getRandomBytes(wordCount);
+    let initEntropy = getInitEntropy(randomBytes);
+    let hash = getHash(initEntropy);
+    let checksumBits = parseInt(hash.substring(0,2), 16).toString(2).substring(0,5);
+    let finalEntropy = initEntropy.concat(checksumBits)
+    let mnemonic = getMnemonic(finalEntropy);
+    if(validate(mnemonic))
+    {
+        return mnemonic;
+    }
+    else
+    {
+        console.log(mnemonic)
+        return "ERROR, fail to validate the mnemonic words with BIP39 standard.";
+    }
+    
 }
 
 function getInitEntropy(randomBytes) {
@@ -158,3 +177,4 @@ function hexToBinary(s) {
   return { valid: true, result: ret };
 }
 
+*/

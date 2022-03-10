@@ -2,7 +2,27 @@ let crypto = require("crypto");
 let CryptoJS = require("crypto-js");
 let BIP39 = require("bip39");
 
-export function getRandomBytes(wordCount) {
+export function generateMnemonic(wordCount)
+{
+    let randomBytes = getRandomBytes(wordCount);
+    let initEntropy = getInitEntropy(randomBytes);
+    let hash = getHash(initEntropy);
+    let checksumBits = parseInt(hash.substring(0,2), 16).toString(2).substring(0,5);
+    let finalEntropy = initEntropy.concat(checksumBits)
+    let mnemonic = getMnemonic(finalEntropy);
+    if(validate(mnemonic))
+    {
+        return mnemonic;
+    }
+    else
+    {
+        console.log(mnemonic)
+        return "ERROR, fail to validate the mnemonic words with BIP39 standard.";
+    }
+    
+}
+
+function getRandomBytes(wordCount) {
   // Can be any of 12, 15, 18, 21, 24
   let fullEntropy = wordCount * 11; // 11 being the max bit count
   let checksum = fullEntropy % 32; // Checksum = entropy length divided by 32
@@ -15,7 +35,7 @@ export function getRandomBytes(wordCount) {
   return randomBytes;
 }
 
-export function getInitEntropy(randomBytes) {
+function getInitEntropy(randomBytes) {
   let initEntropy = "";
   for (let count = 0; count < randomBytes.length; count++) {
     let firstChar = randomBytes.charAt(count);
@@ -26,12 +46,32 @@ export function getInitEntropy(randomBytes) {
   return initEntropy;
 }
 
-export function getHash(string) {
+function getHash(string) {
   let hex = binaryToHex(string).result;
   console.log("hex is", hex);
   let hash = CryptoJS.SHA256(CryptoJS.enc.Hex.parse(hex)).toString();
   console.log("hash is", hash);
   return hash;
+}
+
+function getMnemonic(finalEntropy) {
+  let words = [];
+  for (let count = 0, start = 0, end = 11; count < finalEntropy.length / 11; count++) {
+    let bi = finalEntropy.slice(start, end);
+    let biDec = parseInt(bi, 2);
+    start = end;
+    end = end + 11;
+    //finalEntropy.push(BIP39.wordlists.english[biDec]);
+    words.push(BIP39.wordlists.english[biDec]);
+  }
+  console.log(words);
+  //console.log("Validating entropy", BIP39.validateMnemonic(words));
+  return words.join(" ");
+}
+
+export function validate(mnemonic)
+{
+    return BIP39.validateMnemonic(mnemonic)
 }
 
 // Function for converting binary to hexadecimal bytes
@@ -79,22 +119,42 @@ function binaryToHex(s) {
 
 // Function for converting hexadecimal bytes to binary
 function hexToBinary(s) {
-    var i, k, part, ret = '';
-    // lookup table for easier conversion. '0' characters are padded for '1' to '7'
-    var lookupTable = {
-        '0': '0000', '1': '0001', '2': '0010', '3': '0011', '4': '0100',
-        '5': '0101', '6': '0110', '7': '0111', '8': '1000', '9': '1001',
-        'a': '1010', 'b': '1011', 'c': '1100', 'd': '1101',
-        'e': '1110', 'f': '1111',
-        'A': '1010', 'B': '1011', 'C': '1100', 'D': '1101',
-        'E': '1110', 'F': '1111'
-    };
-    for (i = 0; i < s.length; i += 1) {
-        if (lookupTable.hasOwnProperty(s[i])) {
-            ret += lookupTable[s[i]];
-        } else {
-            return { valid: false };
-        }
+  var i,
+    k,
+    part,
+    ret = "";
+  // lookup table for easier conversion. '0' characters are padded for '1' to '7'
+  var lookupTable = {
+    0: "0000",
+    1: "0001",
+    2: "0010",
+    3: "0011",
+    4: "0100",
+    5: "0101",
+    6: "0110",
+    7: "0111",
+    8: "1000",
+    9: "1001",
+    a: "1010",
+    b: "1011",
+    c: "1100",
+    d: "1101",
+    e: "1110",
+    f: "1111",
+    A: "1010",
+    B: "1011",
+    C: "1100",
+    D: "1101",
+    E: "1110",
+    F: "1111",
+  };
+  for (i = 0; i < s.length; i += 1) {
+    if (lookupTable.hasOwnProperty(s[i])) {
+      ret += lookupTable[s[i]];
+    } else {
+      return { valid: false };
     }
-    return { valid: true, result: ret };
+  }
+  return { valid: true, result: ret };
 }
+

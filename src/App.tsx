@@ -1,14 +1,14 @@
 import { randomBytes } from 'crypto';
 import React, { useRef, useState } from 'react';
 import { Button, ImageBackground, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import * as Generator from "./utils/generator"
+import * as Mnemonic from "./utils/mnemonic"
 const image = { uri: "https://images.pexels.com/photos/844124/pexels-photo-844124.jpeg" };
 let invalidInput = false;
 
 const App = () => {
   const [wordCount, setWordCount] = useState("");
   const [resultText, setResultText] = useState("");
-  
+
   const getWordCount = () => {
     if (
       wordCount === "12" ||
@@ -16,16 +16,10 @@ const App = () => {
       wordCount === "18" ||
       wordCount === "21" ||
       wordCount === "24") {
-        invalidInput = false;
-        const randomBytes = Generator.getRandomBytes(wordCount);
-        const initEntropy = Generator.getInitEntropy(randomBytes);
-        const hash = Generator.getHash(initEntropy);
-        setResultText(hash);
-        // setResultText("The random byte is " + randomBytes + 
-        // "\nInitial Entropy is " + Generator.getInitEntropy(randomBytes));
+      invalidInput = false;
+      setResultText(Mnemonic.generateMnemonic(wordCount));
     }
-    else
-    {
+    else {
       invalidInput = true;
       setResultText("Invalid input. Must be either 12, 15, 18, 21, or 24!");
     }
@@ -47,8 +41,8 @@ const App = () => {
           <Pressable onPress={getWordCount}>
             <Text style={styles.buttonText}>Submit</Text>
           </Pressable>
-          <Text style={[styles.resultText, {color: invalidInput?"red":"white"}]}>{resultText}</Text>
-          
+          <Text style={[styles.resultText, { color: invalidInput ? "red" : "white" }]}>{resultText}</Text>
+
         </View>
       </ImageBackground>
     </KeyboardAvoidingView>
@@ -86,7 +80,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
-  resultText:{
+  resultText: {
     marginVertical: 5,
     textAlign: "center",
     flexWrap: 'wrap'

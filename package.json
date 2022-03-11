@@ -1,5 +1,6 @@
 {
   "name": "btc-playground",
+  "homepage": "https://kelvinthh.github.io/btc-playground",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -16,6 +17,7 @@
     "bs58check": "^2.1.2",
     "create-hash": "^1.2.0",
     "crypto-js": "^4.1.1",
+    "gh-pages": "^3.2.3",
     "hdkey": "^2.0.1",
     "parcel-bundler": "^1.12.5",
     "react": "^17.0.2",
@@ -26,6 +28,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "parcel serve ./index.html",
     "build": "parcel build ./index.html --no-minify",
     "test": "react-scripts test",

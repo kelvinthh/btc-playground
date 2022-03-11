@@ -1,7 +1,5 @@
-let crypto = require("crypto");
-let CryptoJS = require("crypto-js");
-let BIP39 = require("bip39");
-let HDKey = require("hdkey");
+let bip39 = require("bip39");
+let hdkey = require("hdkey");
 let createHash = require("create-hash");
 let bs58check = require('bs58check');
 
@@ -12,13 +10,13 @@ export function getAddress(mnemonic, path) {
   let seed = '';
 
   // Check if the provided wods is valid
-  if (!BIP39.validateMnemonic(mnemonic)) {
+  if (!bip39.validateMnemonic(mnemonic)) {
     return { valid: false };
   } else {
-    seed = BIP39.mnemonicToSeedSync(mnemonic).toString('hex');
+    seed = bip39.mnemonicToSeedSync(mnemonic).toString('hex');
     console.log('seed',seed);
 
-    const root = HDKey.fromMasterSeed(seed);
+    const root = hdkey.fromMasterSeed(seed);
     //const masterPrivateKey = root.privateKey.toString("hex");
 
     // as defined by BIP-44

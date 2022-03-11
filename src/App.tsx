@@ -1,8 +1,6 @@
-import { randomBytes } from 'crypto';
-import React, { useRef, useState } from 'react';
-import { Button, ColorPropType, ImageBackground, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ImageBackground, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import AddressGenerator from './components/AddressGenerator';
 import MnemonicGenerator from './components/MnemonicGenerator';
-import * as Mnemonic from "./utils/mnemonic"
 
 const image = { uri: "https://images.pexels.com/photos/844124/pexels-photo-844124.jpeg" };
 
@@ -16,6 +14,7 @@ const App = () => {
             <Text style={{ color: 'white' }}>Created by Kelvin Tam</Text>
           </View>
           <MnemonicGenerator />
+          <AddressGenerator />
         </View>
       </ImageBackground>
     </KeyboardAvoidingView>

@@ -43,11 +43,11 @@ export default function MnemonicGenerator() {
         <View style={styles.modal}>
           <Text style={styles.contentText}>Here's your words:</Text>
           <Text style={styles.resultText}>{resultText}</Text>
-          <Pressable onPress={()=> {
-              setModalVisible(false);
-              setResultText("15");
-            }}>
-            <Text style={[styles.buttonText,{marginVertical: 10}]}>Try Again!</Text>
+          <Pressable onPress={() => {
+            setModalVisible(false);
+            setResultText("15");
+          }}>
+            <Text style={[styles.buttonText, { marginVertical: 10 }]}>Try Again!</Text>
           </Pressable>
         </View>
       </Modal>
@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000a0",
     width: 450,
     paddingVertical: 50,
+    marginBottom: 15,
     borderRadius: 15
   },
   contentText: {
@@ -105,13 +106,13 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     fontSize: 18,
     fontWeight: "bold",
-    color:'yellow'
+    color: 'yellow'
   },
   errorText: {
     marginTop: 5,
     textAlign: "center",
     flexWrap: 'wrap',
-    color:'red'
+    color: 'red'
   },
   input: {
     width: 315,

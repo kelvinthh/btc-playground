@@ -29,9 +29,9 @@
   },
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "start": "parcel serve ./index.html",
-    "build": "parcel build ./index.html --no-minify",
+    "deploy": "gh-pages -d src",
+    "start": "parcel serve ./src/index.html",
+    "build": "parcel build ./src/index.html --no-minify",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

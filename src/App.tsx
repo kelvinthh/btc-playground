@@ -11,9 +11,9 @@ const App = () => {
     <KeyboardAvoidingView style={styles.container}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
         <View style={styles.content}>
-          <View style={{marginBottom: 50}}>
+          <View style={{ marginBottom: 50 }}>
             <Text style={styles.titleText}>BitCoin Playground</Text>
-            <Text style={{color: 'white'}}>Created by Kelvin Tam</Text>
+            <Text style={{ color: 'white' }}>Created by Kelvin Tam</Text>
           </View>
           <MnemonicGenerator />
         </View>

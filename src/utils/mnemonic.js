@@ -1,21 +1,17 @@
-let crypto = require("crypto");
-let bip39 = require("bip39");
+import * as crypto from "crypto";
+import * as bip39 from "bip39";
 
-export function generateMnemonic(wordCount) // Word count can be any of 12, 15, 18, 21, 24
-{
-    let randomBytes = getRandomBytes(wordCount);
-    let mnemonic = bip39.entropyToMnemonic(randomBytes);
-    if(bip39.validateMnemonic(mnemonic))
-    {
-        console.log("Valid bip39 Mnemonic, Length:",mnemonic.split(' ').length);
-        return mnemonic;
-    }
-    else
-    {
-        console.log(mnemonic)
-        return "ERROR, fail to validate the mnemonic words with bip39 standard.";
-    }
-    
+export function generateMnemonic(wordCount) {
+  // Word count can be any of 12, 15, 18, 21, 24
+  let randomBytes = getRandomBytes(wordCount);
+  let mnemonic = bip39.entropyToMnemonic(randomBytes);
+  if (bip39.validateMnemonic(mnemonic)) {
+    console.log("Valid bip39 Mnemonic, Length:", mnemonic.split(" ").length);
+    return mnemonic;
+  } else {
+    console.log(mnemonic);
+    return "ERROR, fail to validate the mnemonic words with bip39 standard.";
+  }
 }
 
 function getRandomBytes(wordCount) {

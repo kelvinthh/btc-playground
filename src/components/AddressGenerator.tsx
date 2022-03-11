@@ -4,18 +4,25 @@ import * as Address from "../utils/address"
 
 export default function AddressGenerator() {
   const [mnemonic, setMnemonic] = useState("");
-  const [path, setPath] = useState("m/44'/0'/0'/0/0");
-  const [resultText, setResultText] = useState("");
+  const [path, setPath] = useState("");
+  const [resultText, setResultText] = useState<string | undefined>("");
   const [errorText, setErrorText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
   const generateAddress = async () => {
-    let result = Address.getAddress(mnemonic, path);
+    
+    // If path remains unaltered, insert default path value
+    if(path === "")
+    {
+      setPath("m/44'/0'/0'/0/0");
+    }
+
+    let result = Address.getAddress(mnemonic, (path === ""?"m/44'/0'/0'/0/0":path));
     if(result.valid)
     {
       setModalVisible(true);
       setErrorText("");
-      var promise = Promise.resolve(result.ret);
+      var promise = Promise.resolve(result.data);
       promise.then(val=>setResultText(val?.address));
 
     }
@@ -60,7 +67,7 @@ export default function AddressGenerator() {
         style={styles.input}
         onChangeText={setPath}
         value={path}
-        placeholder="Enter path here."
+        placeholder="Enter path here. (Default: m/44'/0'/0'/0/0)"
       />
       <Pressable onPress={generateAddress}>
         <Text style={styles.buttonText}>Generate!</Text>

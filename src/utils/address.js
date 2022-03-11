@@ -1,36 +1,24 @@
-let bip39 = require("bip39");
-let hdkey = require("hdkey");
-let createHash = require("create-hash");
-let bs58check = require('bs58check');
-
+import * as bip39 from "bip39";
+import * as hdkey from "hdkey";
+import * as bitcoin from "bitcoinjs-lib";
 
 export function getAddress(mnemonic, path) {
   console.log("Mnemonic", mnemonic);
   console.log("Path", path);
-  let seed = '';
 
   // Check if the provided wods is valid
   if (!bip39.validateMnemonic(mnemonic)) {
     return { valid: false };
   } else {
-    seed = bip39.mnemonicToSeedSync(mnemonic).toString('hex');
-    console.log('seed',seed);
+    const seed = bip39.mnemonicToSeedSync(mnemonic).toString("hex");
+    console.log("seed", seed);
 
     const root = hdkey.fromMasterSeed(seed);
-    //const masterPrivateKey = root.privateKey.toString("hex");
-
     // as defined by BIP-44
     const addrnode = root.derive(path);
+    const publicKey = addrnode.publicKey;
+    const address = bitcoin.payments.p2wpkh({ pubkey: publicKey }).address ?? "";
 
-    const sha256 = createHash("sha256").update(addrnode.publicKey).digest();
-    const rmd160 = createHash("rmd160").update(sha256).digest();
-
-    let address = Buffer.allocUnsafe(21);
-    address.writeUInt8(0x00, 0);
-    rmd160.copy(address, 1); 
-    const base58Result = bs58check.encode(address);
-    console.log("Base58Check: " + base58Result);
-
-    return { valid: true, ret: {seed: seed, address: base58Result} };
+    return { valid: true, data: { seed: seed, address: address } };
   }
 }

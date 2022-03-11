@@ -11,7 +11,7 @@ const App = () => {
         <View style={styles.content}>
           <View style={{ marginBottom: 50 }}>
             <Text style={styles.titleText}>BitCoin Playground</Text>
-            <Text style={{ color: 'white' }}>Created by Kelvin Tam</Text>
+            <Text style={{ color: 'white' }}>Created by <b>Kelvin Tam</b> w/ <b>React Native Web</b></Text>
           </View>
           <MnemonicGenerator />
           <AddressGenerator />

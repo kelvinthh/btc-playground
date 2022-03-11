@@ -47,7 +47,7 @@ export default function MnemonicGenerator() {
             setModalVisible(false);
             setResultText("15");
           }}>
-            <Text style={[styles.buttonText, { marginVertical: 10 }]}>Try Again!</Text>
+            <Text style={[styles.buttonText, { marginVertical: 10 }]}>OK!</Text>
           </Pressable>
         </View>
       </Modal>

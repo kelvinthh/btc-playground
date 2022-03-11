@@ -1,19 +1,60 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useState } from 'react'
+import * as Address from "../utils/address"
 
 export default function AddressGenerator() {
-  const [seed, setSeed] = useState("");
-  const [path, setPath] = useState("");
+  const [mnemonic, setMnemonic] = useState("");
+  const [path, setPath] = useState("m/44'/0'/0'/0/0");
+  const [resultText, setResultText] = useState("");
+  const [errorText, setErrorText] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const generateAddress = async () => {
+    let result = Address.getAddress(mnemonic, path);
+    if(result.valid)
+    {
+      setModalVisible(true);
+      setErrorText("");
+      var promise = Promise.resolve(result.ret);
+      promise.then(val=>setResultText(val?.address));
+
+    }
+    else
+    {
+      setErrorText("Invalid mnemonic words!");
+      setMnemonic("");
+    }
+  }
 
   return (
     <View style={styles.content}>
+      <Modal
+        animationType='slide'
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.modal}>
+          <Text style={styles.contentText}>Here's your address:</Text>
+          <Text style={styles.resultText}>{resultText}</Text>
+          <Pressable onPress={() => {
+            setModalVisible(false);
+            setResultText("15");
+          }}>
+            <Text style={[styles.buttonText, { marginVertical: 10 }]}>OK!</Text>
+          </Pressable>
+        </View>
+      </Modal>
+
       <Text>AddressGenerator</Text>
       <Text style={styles.contentText}>Address Generator</Text>
       <TextInput
         style={styles.input}
-        onChangeText={setSeed}
-        value={seed}
-        placeholder="Enter seed here"
+        onChangeText={setMnemonic}
+        value={mnemonic}
+        placeholder="Enter mnemonic words here"
       />
       <TextInput
         style={styles.input}
@@ -21,7 +62,12 @@ export default function AddressGenerator() {
         value={path}
         placeholder="Enter path here."
       />
+      <Pressable onPress={generateAddress}>
+        <Text style={styles.buttonText}>Generate!</Text>
+      </Pressable>
+      <Text style={styles.errorText}>{errorText}</Text>
     </View>
+
   )
 }
 

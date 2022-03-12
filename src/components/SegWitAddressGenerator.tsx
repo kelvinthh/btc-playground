@@ -12,17 +12,15 @@ export default function SegWitAddressGenerator() {
   const generateAddress = async () => {
 
     try {
-      let result = getSegwit(mnemonic, (path === ""?"m/44'/0'/0'/0/0":path));
-      if(result.valid)
-      {
+      let result = getSegwit(mnemonic, (path === "" ? "m/44'/0'/0'/0/0" : path));
+      if (result.valid) {
         setModalVisible(true);
         setErrorText("");
         var promise = Promise.resolve(result.data);
-        promise.then(val=>setResultText(val?.address));
-  
+        promise.then(val => setResultText(val?.address));
+
       }
-      else
-      {
+      else {
         setErrorText("Invalid mnemonic words!");
         setMnemonic("");
       }

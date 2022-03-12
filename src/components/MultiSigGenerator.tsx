@@ -1,8 +1,6 @@
 import { Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useState } from 'react'
-import * as Address from "../utils/address"
-//import { getMultiSeg } from '../utils/address';
-import { getMultiSeg } from '../utils/address';
+import { getMultiSig } from '../utils/address';
 
 export default function MultiSegP2SHGenerator() {
   const [mValue, setMValue] = useState("");
@@ -43,7 +41,7 @@ export default function MultiSegP2SHGenerator() {
     }
 
     try {
-      let address = getMultiSeg(mValue, _pubKeys);
+      let address = getMultiSig(mValue, _pubKeys);
       if (address != "") {
         setModalVisible(true);
         setErrorText("");
@@ -80,7 +78,7 @@ export default function MultiSegP2SHGenerator() {
         </View>
       </Modal>
 
-      <Text style={styles.contentText}>MultiSeg P2SH Address Generator</Text>
+      <Text style={styles.contentText}>MultiSig P2SH Address Generator</Text>
       <TextInput
         style={styles.input}
         onChangeText={setMValue}
@@ -97,7 +95,7 @@ export default function MultiSegP2SHGenerator() {
         style={styles.input}
         onChangeText={setPublicKeys}
         value={publicKeys}
-        placeholder='Enter public keys, separate each key with a comma ",". E.g. key1,key2,key3...'
+        placeholder='Enter public keys, split each key with a ",". E.g. key1,key2,key3...'
         multiline
         numberOfLines={5}
       />

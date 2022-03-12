@@ -24,9 +24,9 @@ export function getSegwit(mnemonic, path) {
   }
 }
 
-export function getMultiSeg(mValue, publicKeys) {
+export function getMultiSig(mValue, publicKeys) {
   console.log("M Length", mValue, "Public keys length", publicKeys.length);
   let pubkeys = publicKeys.map((hex) => Buffer.from(hex, "hex"));
-  const { address } = bitcoin.payments.p2sh({redeem: bitcoin.payments.p2ms({ m: +mValue, pubkeys }),});
+  const { address } = bitcoin.payments.p2sh({ redeem: bitcoin.payments.p2ms({ m: +mValue, pubkeys }) });
   return address ?? "";
 }

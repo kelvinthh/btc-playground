@@ -2,7 +2,7 @@ import * as bip39 from "bip39";
 import * as hdkey from "hdkey";
 import * as bitcoin from "bitcoinjs-lib";
 
-export function getAddress(mnemonic, path) {
+export function getSegwit(mnemonic, path) {
   console.log("Mnemonic", mnemonic);
   console.log("Path", path);
 
@@ -19,7 +19,14 @@ export function getAddress(mnemonic, path) {
     const address = bitcoin.payments.p2wpkh({ pubkey: publicKey }).address ?? "";
 
     console.log("Seed", seed);
-    console.log('Public key', publicKey.toString('hex'));
+    console.log("Public key", publicKey.toString("hex"));
     return { valid: true, data: { seed: seed, address: address } };
   }
+}
+
+export function getMultiSeg(mValue, publicKeys) {
+  console.log("M Length", mValue, "Public keys length", publicKeys.length);
+  let pubkeys = publicKeys.map((hex) => Buffer.from(hex, "hex"));
+  const { address } = bitcoin.payments.p2sh({redeem: bitcoin.payments.p2ms({ m: +mValue, pubkeys }),});
+  return address ?? "";
 }

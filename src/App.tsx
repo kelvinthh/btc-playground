@@ -2,6 +2,7 @@ import { Image, ImageBackground, KeyboardAvoidingView, Pressable, StyleSheet, Te
 import SegWitAddressGenerator from './components/SegWitAddressGenerator';
 import MnemonicGenerator from './components/MnemonicGenerator';
 import { useState } from 'react';
+import AddressGenerator from './components/AddressGenerator';
 
 const image = { uri: "https://images.pexels.com/photos/844124/pexels-photo-844124.jpeg" };
 const ToGitHub = () => window.open("https://github.com/kelvinthh/btc-playground", '_blank');
@@ -21,7 +22,9 @@ const App = () => {
             </Pressable>
           </View>
           <MnemonicGenerator />
-          <SegWitAddressGenerator />
+          <AddressGenerator />
+          {/* <MnemonicGenerator />
+          <SegWitAddressGenerator /> */}
         </View>
       </ImageBackground>
     </KeyboardAvoidingView>

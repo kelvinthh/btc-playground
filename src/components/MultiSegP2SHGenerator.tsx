@@ -1,30 +1,56 @@
 import { Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useState } from 'react'
-import { getSegwit } from '../utils/address';
+import * as Address from "../utils/address"
+//import { getMultiSeg } from '../utils/address';
+import { getMultiSeg } from '../utils/address';
 
-export default function SegWitAddressGenerator() {
-  const [mnemonic, setMnemonic] = useState("");
-  const [path, setPath] = useState("");
+export default function MultiSegP2SHGenerator() {
+  const [mValue, setMValue] = useState("");
+  const [nValue, setNValue] = useState("");
+  const [publicKeys, setPublicKeys] = useState("");
   const [resultText, setResultText] = useState<string | undefined>("");
   const [errorText, setErrorText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
   const generateAddress = async () => {
 
+    if (isNaN(+mValue) || isNaN(+nValue)) {
+      setErrorText('Please enter only numeric value on m and n values.')
+      return;
+    }
+
+    if (+nValue < +mValue) {
+      setErrorText('n value must be greater than m value.')
+      return;
+    }
+
+    let _pubKeys = publicKeys.split(',');
+    if (_pubKeys.length != +nValue) {
+      setErrorText('Please enter ' + nValue + ' public keys!');
+      return;
+    }
+
+    _pubKeys.forEach((key) => {
+      console.log('Public Key Found:', key);
+    })
+
+    let re = /[0-9A-Fa-f]{6}/g;
+    for (let i = 0; i < _pubKeys.length; i++) {
+      if (!re.test(_pubKeys[i])) {
+        setErrorText('Please enter ' + nValue + ' valid public key(s)!');
+        return;
+      }
+    }
+
     try {
-      let result = getSegwit(mnemonic, (path === ""?"m/44'/0'/0'/0/0":path));
-      if(result.valid)
-      {
+      let address = getMultiSeg(mValue, _pubKeys);
+      if (address != "") {
         setModalVisible(true);
         setErrorText("");
-        var promise = Promise.resolve(result.data);
-        promise.then(val=>setResultText(val?.address));
-  
+        setResultText(address);
       }
-      else
-      {
-        setErrorText("Invalid mnemonic words!");
-        setMnemonic("");
+      else {
+        setErrorText("Error generating address.");
       }
     } catch (error) {
       setErrorText(String(error));
@@ -54,18 +80,26 @@ export default function SegWitAddressGenerator() {
         </View>
       </Modal>
 
-      <Text style={styles.contentText}>SegWit Address Generator</Text>
+      <Text style={styles.contentText}>MultiSeg P2SH Address Generator</Text>
       <TextInput
         style={styles.input}
-        onChangeText={setMnemonic}
-        value={mnemonic}
-        placeholder="Enter mnemonic words"
+        onChangeText={setMValue}
+        value={mValue}
+        placeholder="Enter m value"
       />
       <TextInput
         style={styles.input}
-        onChangeText={setPath}
-        value={path}
-        placeholder="Enter path (Default: m/44'/0'/0'/0/0)"
+        onChangeText={setNValue}
+        value={nValue}
+        placeholder="Enter n value"
+      />
+      <TextInput
+        style={styles.input}
+        onChangeText={setPublicKeys}
+        value={publicKeys}
+        placeholder='Enter public keys, separate each key with a comma ",". E.g. key1,key2,key3...'
+        multiline
+        numberOfLines={5}
       />
       <Pressable onPress={generateAddress}>
         <Text style={styles.buttonText}>Generate!</Text>
@@ -117,7 +151,6 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 315,
-    height: 40,
     margin: 12,
     borderWidth: 1,
     padding: 10,

@@ -1,6 +1,7 @@
 import { Image, ImageBackground, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import AddressGenerator from './components/AddressGenerator';
+import SegWitAddressGenerator from './components/SegWitAddressGenerator';
 import MnemonicGenerator from './components/MnemonicGenerator';
+import { useState } from 'react';
 
 const image = { uri: "https://images.pexels.com/photos/844124/pexels-photo-844124.jpeg" };
 const ToGitHub = () => window.open("https://github.com/kelvinthh/btc-playground", '_blank');
@@ -20,7 +21,7 @@ const App = () => {
             </Pressable>
           </View>
           <MnemonicGenerator />
-          <AddressGenerator />
+          <SegWitAddressGenerator />
         </View>
       </ImageBackground>
     </KeyboardAvoidingView>

@@ -2,7 +2,7 @@ import { Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-nativ
 import React, { useState } from 'react'
 import * as Address from "../utils/address"
 
-export default function AddressGenerator() {
+export default function SegWitAddressGenerator() {
   const [mnemonic, setMnemonic] = useState("");
   const [path, setPath] = useState("");
   const [resultText, setResultText] = useState<string | undefined>("");
@@ -10,26 +10,25 @@ export default function AddressGenerator() {
   const [modalVisible, setModalVisible] = useState(false);
 
   const generateAddress = async () => {
-    
-    // If path remains unaltered, insert default path value
-    if(path === "")
-    {
-      setPath("m/44'/0'/0'/0/0");
-    }
 
-    let result = Address.getAddress(mnemonic, (path === ""?"m/44'/0'/0'/0/0":path));
-    if(result.valid)
-    {
-      setModalVisible(true);
-      setErrorText("");
-      var promise = Promise.resolve(result.data);
-      promise.then(val=>setResultText(val?.address));
-
-    }
-    else
-    {
-      setErrorText("Invalid mnemonic words!");
-      setMnemonic("");
+    try {
+      let result = Address.getAddress(mnemonic, (path === ""?"m/44'/0'/0'/0/0":path));
+      if(result.valid)
+      {
+        setModalVisible(true);
+        setErrorText("");
+        var promise = Promise.resolve(result.data);
+        promise.then(val=>setResultText(val?.address));
+  
+      }
+      else
+      {
+        setErrorText("Invalid mnemonic words!");
+        setMnemonic("");
+      }
+    } catch (error) {
+      setErrorText(String(error));
+      console.log(error);
     }
   }
 
@@ -44,7 +43,7 @@ export default function AddressGenerator() {
         }}
       >
         <View style={styles.modal}>
-          <Text style={styles.contentText}>Here's your address:</Text>
+          <Text style={styles.contentText}>Wallet address generated:</Text>
           <Text style={styles.resultText}>{resultText}</Text>
           <Pressable onPress={() => {
             setModalVisible(false);
@@ -56,18 +55,18 @@ export default function AddressGenerator() {
       </Modal>
 
       <Text>AddressGenerator</Text>
-      <Text style={styles.contentText}>Address Generator</Text>
+      <Text style={styles.contentText}>SegWit Address Generator</Text>
       <TextInput
         style={styles.input}
         onChangeText={setMnemonic}
         value={mnemonic}
-        placeholder="Enter mnemonic words here"
+        placeholder="Enter mnemonic words"
       />
       <TextInput
         style={styles.input}
         onChangeText={setPath}
         value={path}
-        placeholder="Enter path here. (Default: m/44'/0'/0'/0/0)"
+        placeholder="Enter path (Default: m/44'/0'/0'/0/0)"
       />
       <Pressable onPress={generateAddress}>
         <Text style={styles.buttonText}>Generate!</Text>

@@ -13,18 +13,23 @@ export default function MnemonicGenerator() {
 
   const getWordCount = () => {
 
-    // Check if input is a number and within range
-    if (!isNaN(+wordCount) && +wordCount >= 12 && +wordCount <= 24) {
-      invalidInput = false;
-      setModalVisible(true);
-      setResultText(Mnemonic.generateMnemonic(wordCount));
-      setWordCount("");
-      setErrorText("");
-    }
-    else {
-      invalidInput = true;
-      setWordCount("");
-      setErrorText("Invalid input. Please enter a number from 12 to 24!");
+    try {
+      // Check if input is a number and within range
+      if (!isNaN(+wordCount) && +wordCount >= 12 && +wordCount <= 24) {
+        invalidInput = false;
+        setModalVisible(true);
+        setResultText(Mnemonic.generateMnemonic(wordCount));
+        setWordCount("");
+        setErrorText("");
+      }
+      else {
+        invalidInput = true;
+        setWordCount("");
+        setErrorText("Invalid input. Please enter a number from 12 to 24!");
+      }
+    } catch (error) {
+      setErrorText(String(error));
+      console.log(error);
     }
   }
   return (
@@ -55,7 +60,7 @@ export default function MnemonicGenerator() {
           style={styles.input}
           onChangeText={setWordCount}
           value={wordCount}
-          placeholder="Word Count (Any number from 12 to 24)"
+          placeholder="Enter word count (from 12 to 24)"
           keyboardType="numeric"
         />
       </View>

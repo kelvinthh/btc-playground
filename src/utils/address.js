@@ -11,7 +11,6 @@ export function getAddress(mnemonic, path) {
     return { valid: false };
   } else {
     const seed = bip39.mnemonicToSeedSync(mnemonic).toString("hex");
-    console.log("seed", seed);
 
     const root = hdkey.fromMasterSeed(seed);
     // as defined by BIP-44
@@ -19,6 +18,8 @@ export function getAddress(mnemonic, path) {
     const publicKey = addrnode.publicKey;
     const address = bitcoin.payments.p2wpkh({ pubkey: publicKey }).address ?? "";
 
+    console.log("Seed", seed);
+    console.log('Public key', publicKey.toString('hex'));
     return { valid: true, data: { seed: seed, address: address } };
   }
 }

@@ -1,8 +1,9 @@
-import { ImageBackground, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Image, ImageBackground, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import AddressGenerator from './components/AddressGenerator';
 import MnemonicGenerator from './components/MnemonicGenerator';
 
 const image = { uri: "https://images.pexels.com/photos/844124/pexels-photo-844124.jpeg" };
+const ToGitHub = () => window.open("https://github.com/kelvinthh/btc-playground", '_blank');
 
 const App = () => {
   return (
@@ -11,8 +12,12 @@ const App = () => {
         <View style={styles.content}>
           <View style={{ marginBottom: 50 }}>
             <Text style={styles.titleText}>BitCoin Playground</Text>
-            <Text style={{ color: 'white' }}>Created by <b>Kelvin Tam</b> w/ <b>React Native Web</b></Text>
-            <Text style={{ color: 'white' }}>https://github.com/kelvinthh/btc-playground</Text>
+            <Pressable onPress={ToGitHub}>
+              <View style={styles.name}>
+                <Text style={{ color: 'white' }}>Created by <b>Kelvin Tam</b> w/ <b>React Native Web</b></Text>
+                <Image style={styles.tinyLogo} source={require('.//misc/GitHub-Emblem.png')} />
+              </View>
+            </Pressable>
           </View>
           <MnemonicGenerator />
           <AddressGenerator />
@@ -44,5 +49,15 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontWeight: "bold",
   },
+  tinyLogo: {
+    width: 60,
+    height: 30,
+    marginLeft: 10
+  },
+  name: {
+    marginTop: -5,
+    flexDirection: 'row',
+    alignItems: 'center'
+  }
 })
 export default App;

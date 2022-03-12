@@ -1,7 +1,5 @@
 import { Image, ImageBackground, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import SegWitAddressGenerator from './components/SegWitAddressGenerator';
 import MnemonicGenerator from './components/MnemonicGenerator';
-import { useState } from 'react';
 import AddressGenerator from './components/AddressGenerator';
 
 const image = { uri: "https://images.pexels.com/photos/844124/pexels-photo-844124.jpeg" };
@@ -23,8 +21,6 @@ const App = () => {
           </View>
           <MnemonicGenerator />
           <AddressGenerator />
-          {/* <MnemonicGenerator />
-          <SegWitAddressGenerator /> */}
         </View>
       </ImageBackground>
     </KeyboardAvoidingView>

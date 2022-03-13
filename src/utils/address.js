@@ -14,7 +14,9 @@ export function getSegwit(mnemonic, seed, path) {
     let buffer = "";
 
     if (seed != "") {
-      buffer = seed; // Turning hex string to Buffer
+      const re = /[0-9A-Fa-f]{6}/g;
+      if(!re.test(seed)) return { valid: false, errMsg: "Invalid seed hex string." };
+      buffer = seed;
     } else if (mnemonic != "") {
       // Check if the provided mnemonic words is valid
       if (!bip39.validateMnemonic(mnemonic)) return { valid: false, errMsg: "Invalid mnemonic words." };

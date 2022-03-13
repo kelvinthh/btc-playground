@@ -69,7 +69,7 @@ export default function SegWitAddressGenerator() {
           setSeed(text);
         }}
         value={seed}
-        placeholder="Enter seed"
+        placeholder="Enter hex string seed"
       />
       <View
         style={{

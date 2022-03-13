@@ -22,7 +22,7 @@ export default function AddressGenerator() {
             {mode === 0 ? (<Text style={{ color: 'white' }}>Select wallet type:</Text>) : (<></>)}
             <View style={styles.buttonGroup}>
                 <Pressable onPress={() => setMode(1)}>
-                    <Text style={styles.buttonText}>SegWit</Text>
+                    <Text style={styles.buttonText}>HD SegWit</Text>
                 </Pressable>
                 <Pressable onPress={() => setMode(2)}>
                     <Text style={styles.buttonText}>N-Out-Of-M MultiSig</Text>

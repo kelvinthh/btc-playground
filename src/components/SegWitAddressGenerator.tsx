@@ -4,25 +4,24 @@ import { getSegwit } from '../utils/address';
 
 export default function SegWitAddressGenerator() {
   const [mnemonic, setMnemonic] = useState("");
+  const [seed, setSeed] = useState("");
   const [path, setPath] = useState("");
   const [resultText, setResultText] = useState<string | undefined>("");
-  const [errorText, setErrorText] = useState("");
+  const [errorText, setErrorText] = useState<string | undefined>("");
   const [modalVisible, setModalVisible] = useState(false);
 
   const generateAddress = async () => {
 
     try {
-      let result = getSegwit(mnemonic, (path === "" ? "m/44'/0'/0'/0/0" : path));
+      let result = getSegwit(mnemonic, seed, (path === "" ? "m/44'/0'/0'/0/0" : path));   // Default m/44 path if none is specified
       if (result.valid) {
         setModalVisible(true);
         setErrorText("");
-        var promise = Promise.resolve(result.data);
-        promise.then(val => setResultText(val?.address));
+        Promise.resolve(result.data).then(value => setResultText(value?.address));
 
       }
       else {
-        setErrorText("Invalid mnemonic words!");
-        setMnemonic("");
+        Promise.resolve(result.errMsg).then(value => setErrorText(value));
       }
     } catch (error) {
       setErrorText(String(error));
@@ -52,12 +51,34 @@ export default function SegWitAddressGenerator() {
         </View>
       </Modal>
 
-      <Text style={styles.contentText}>SegWit Address Generator</Text>
+      <Text style={styles.contentText}>HD SegWit Address Generator</Text>
       <TextInput
         style={styles.input}
-        onChangeText={setMnemonic}
+        onChangeText={text => {
+          setMnemonic(text);
+          setSeed("");
+        }}
         value={mnemonic}
         placeholder="Enter mnemonic words"
+      />
+      <Text style={styles.orText}>Or</Text>
+      <TextInput
+        style={styles.input}
+        onChangeText={text => {
+          setMnemonic("");
+          setSeed(text);
+        }}
+        value={seed}
+        placeholder="Enter seed"
+      />
+      <View
+        style={{
+          width: '55%',
+          height: 3,
+          borderRadius: 5,
+          backgroundColor: 'white',
+          marginVertical: 15,
+        }}
       />
       <TextInput
         style={styles.input}
@@ -112,6 +133,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
     flexWrap: 'wrap',
     color: 'red'
+  },
+  orText: {
+    marginTop: 5,
+    textAlign: "center",
+    flexWrap: 'wrap',
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 14,
   },
   input: {
     width: 315,

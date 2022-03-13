@@ -2,25 +2,36 @@ import * as bip39 from "bip39";
 import * as hdkey from "hdkey";
 import * as bitcoin from "bitcoinjs-lib";
 
-export function getSegwit(mnemonic, path) {
+export function getSegwit(mnemonic, seed, path) {
   console.log("Mnemonic", mnemonic);
+  console.log("Seed", seed);
   console.log("Path", path);
 
-  // Check if the provided wods is valid
-  if (!bip39.validateMnemonic(mnemonic)) {
-    return { valid: false };
-  } else {
-    const seed = bip39.mnemonicToSeedSync(mnemonic).toString("hex");
+  try {
+    if (mnemonic === "" && seed === "") return { valid: false, errMsg: "Both menmonic words and seed are empty." };
+    if (mnemonic != "" && seed !== "") return { valid: false, errMsg: "Both menmonic words and seed are not empty." };
 
-    const root = hdkey.fromMasterSeed(seed);
+    let buffer = "";
+
+    if (seed != "") {
+      buffer = seed; // Turning hex string to Buffer
+    } else if (mnemonic != "") {
+      // Check if the provided mnemonic words is valid
+      if (!bip39.validateMnemonic(mnemonic)) return { valid: false, errMsg: "Invalid mnemonic words." };
+      buffer = bip39.mnemonicToSeedSync(mnemonic).toString("hex");
+    }
+    console.log("Received words", mnemonic);
+    console.log("Calculated seed", buffer);
+
+    const root = hdkey.fromMasterSeed(buffer);
     // as defined by BIP-44
     const addrnode = root.derive(path);
     const publicKey = addrnode.publicKey;
     const address = bitcoin.payments.p2wpkh({ pubkey: publicKey }).address ?? "";
-
-    console.log("Seed", seed);
     console.log("Public key", publicKey.toString("hex"));
     return { valid: true, data: { seed: seed, address: address } };
+  } catch (error) {
+    return { valid: false, errMsg: String(error) };
   }
 }
 
